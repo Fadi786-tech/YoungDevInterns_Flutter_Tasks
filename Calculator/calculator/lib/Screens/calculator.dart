@@ -1,392 +1,115 @@
 import 'package:flutter/material.dart';
 
-class Calculator extends StatelessWidget {
-  Calculator({super.key});
+class Calculator extends StatefulWidget {
+  const Calculator({super.key});
 
-  final TextEditingController _valueController = TextEditingController();
+  @override
+  State<Calculator> createState() => _CalculatorState();
+}
+
+class _CalculatorState extends State<Calculator> {
+  TextEditingController value = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Calculator"),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            color: Colors.black,
-            height: 200,
-            width: 270,
-            child: const Column(
-              children: [
-                Text(
-                  'Calculator',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28,
-                      color: Colors.white),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextField(
-                  style:
-                      TextStyle(color: Colors.white, fontSize: 30, height: 2),
+      body: Container(
+        color: Colors.black,
+        height: height,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Center(
+              child: Text(
+                'Calculator',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 28,
+                    color: Colors.white),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  style: const TextStyle(
+                      color: Colors.white, fontSize: 30, height: 2),
                   textDirection: TextDirection.rtl,
-                  //controller: _valueController,
-                  decoration: InputDecoration(
+                  controller: value,
+                  decoration: const InputDecoration(
                     fillColor: Colors.white,
                     contentPadding: EdgeInsets.all(30),
                     border: OutlineInputBorder(),
                   ),
                   cursorHeight: 60,
-                )
-              ],
+                ),
+              ),
             ),
-          ),
-          Container(
-            color: Colors.black,
-            width: 270,
-            height: 350,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 7,
-                    ),
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(30)),
-                      padding: const EdgeInsets.only(left: 0, top: 0),
-                      child: buttonmethod(
-                          "AC",
-                          const TextStyle(color: Colors.white, fontSize: 25),
-                          () {}),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(30)),
-                      padding: const EdgeInsets.only(left: 0, top: 0),
-                      child: TextButton(
-                          onPressed: () {},
-                          child: const Icon(
-                            Icons.backspace,
-                            color: Colors.white,
-                          )),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "%",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "/",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                  ],
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 7,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "7",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "8",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "9",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "X",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                  ],
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 7,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "4",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "5",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "6",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "_",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                  ],
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 7,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "1",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "2",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "3",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "+",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                  ],
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 7,
-                    ),
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade800,
-                          borderRadius: BorderRadius.circular(30)),
-                      padding: const EdgeInsets.only(left: 0, top: 0),
-                      child: const Icon(
-                        Icons.calculate_outlined,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            '0',
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            ".",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.only(left: 0, top: 0),
-                        child: buttonmethod(
-                            "=",
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                            () {})),
-                  ],
-                ),
-              ],
-            ),
-          )
-        ],
+            buildButtonRow(["AC", Icons.backspace, "%", "/"], width, height,
+                [clearInput, backspace, () {}, () {}]),
+            const SizedBox(height: 8),
+            buildButtonRow(["7", "8", "9", "X"], width, height,
+                [() {}, () {}, () {}, () {}]),
+            const SizedBox(height: 8),
+            buildButtonRow(["4", "5", "6", "-"], width, height,
+                [() {}, () {}, () {}, () {}]),
+            const SizedBox(height: 8),
+            buildButtonRow(["1", "2", "3", "+"], width, height,
+                [() {}, () {}, () {}, () {}]),
+            const SizedBox(height: 8),
+            buildButtonRow([Icons.calculate_outlined, "0", ".", "="], width,
+                height, [() {}, () {}, () {}, () {}]),
+          ],
+        ),
       ),
     );
   }
 
-  TextButton buttonmethod(String text, TextStyle? textStyle1, Function f) {
+  void clearInput() {
+    value.clear();
+  }
+
+  void backspace() {
+    // Add functionality here for backspace
+  }
+
+  Widget buildButtonRow(List<dynamic> items, double width, double height,
+      List<Function> actions) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List.generate(items.length, (index) {
+        return Container(
+          width: width * 0.22,
+          height: height * 0.1,
+          decoration: BoxDecoration(
+            color: items[index] == "/" ||
+                    items[index] == "X" ||
+                    items[index] == "-" ||
+                    items[index] == "+" ||
+                    items[index] == "="
+                ? Colors.orange
+                : Colors.grey.shade800,
+            shape: BoxShape.circle,
+          ),
+          child: buttonWidget(items[index], actions[index]),
+        );
+      }),
+    );
+  }
+
+  Widget buttonWidget(dynamic item, Function onPressed) {
     return TextButton(
-        onPressed: () {
-          f();
-        },
-        child: Text(
-          text,
-          style: textStyle1,
-        ));
+      onPressed: () => onPressed(),
+      child: item is IconData
+          ? Icon(item, color: Colors.white)
+          : Text(item,
+              style: const TextStyle(color: Colors.white, fontSize: 25)),
+    );
   }
 }
