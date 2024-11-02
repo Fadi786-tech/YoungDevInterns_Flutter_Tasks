@@ -9,15 +9,15 @@ class Calculator extends StatefulWidget {
 
 class _CalculatorState extends State<Calculator> {
   TextEditingController value = TextEditingController();
+  String expression = '';
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Calculator"),
+        title: const Center(child: Text("Calculator")),
       ),
       body: Container(
         color: Colors.black,
@@ -48,39 +48,118 @@ class _CalculatorState extends State<Calculator> {
                     border: OutlineInputBorder(),
                   ),
                   cursorHeight: 60,
+                  readOnly: true,
                 ),
               ),
             ),
             buildButtonRow(["AC", Icons.backspace, "%", "/"], width, height,
-                [clearInput, backspace, () {}, () {}]),
-            const SizedBox(height: 8),
+                [clearInput, backspace, percentage, () => inputOperator('/')]),
+            SizedBox(height: 8),
             buildButtonRow(["7", "8", "9", "X"], width, height,
-                [() {}, () {}, () {}, () {}]),
-            const SizedBox(height: 8),
+                [() => inputNumber("7"), () => inputNumber("8"), () => inputNumber("9"), () => inputOperator("X")]),
+            SizedBox(height: 8),
             buildButtonRow(["4", "5", "6", "-"], width, height,
-                [() {}, () {}, () {}, () {}]),
-            const SizedBox(height: 8),
+                [() => inputNumber("4"), () => inputNumber("5"), () => inputNumber("6"), () => inputOperator("-")]),
+            SizedBox(height: 8),
             buildButtonRow(["1", "2", "3", "+"], width, height,
-                [() {}, () {}, () {}, () {}]),
-            const SizedBox(height: 8),
-            buildButtonRow([Icons.calculate_outlined, "0", ".", "="], width,
-                height, [() {}, () {}, () {}, () {}]),
+                [() => inputNumber("1"), () => inputNumber("2"), () => inputNumber("3"), () => inputOperator("+")]),
+            SizedBox(height: 8),
+            buildButtonRow(
+                [Icons.calculate_outlined, "0", ".", "="], width, height,
+                [() {}, () => inputNumber("0"), () => inputNumber("."), calculateResult]),
           ],
         ),
       ),
     );
   }
 
+  void inputNumber(String number) {
+    setState(() {
+      expression += number;
+      value.text = expression;
+    });
+  }
+
+  void inputOperator(String operator) {
+    if (expression.isNotEmpty && "+-X/".contains(expression[expression.length - 1])) return;
+    setState(() {
+      expression += operator;
+      value.text = expression;
+    });
+  }
+
   void clearInput() {
-    value.clear();
+    setState(() {
+      expression = '';
+      value.clear();
+    });
   }
 
   void backspace() {
-    // Add functionality here for backspace
+    if (expression.isNotEmpty) {
+      setState(() {
+        expression = expression.substring(0, expression.length - 1);
+        value.text = expression;
+      });
+    }
   }
 
-  Widget buildButtonRow(List<dynamic> items, double width, double height,
-      List<Function> actions) {
+  void percentage() {
+    if (expression.isNotEmpty) {
+      double current = double.parse(expression) / 100;
+      setState(() {
+        expression = current.toString();
+        value.text = expression;
+      });
+    }
+  }
+
+  void calculateResult() {
+    try {
+      String finalExpression = expression.replaceAll("X", "*");
+      final result = _evaluateExpression(finalExpression);
+      setState(() {
+        expression = result.toString();
+        value.text = expression;
+      });
+    } catch (e) {
+      setState(() {
+        value.text = "Error";
+      });
+    }
+  }
+
+  double _evaluateExpression(String expression) {
+    List<String> tokens = expression.split(RegExp(r'([+\-*/])')).map((s) => s.trim()).toList();
+    List<String> operators = RegExp(r'([+\-*/])').allMatches(expression).map((e) => e.group(0)!).toList();
+
+    if (tokens.isEmpty || tokens.length != operators.length + 1) {
+      throw FormatException("Invalid Expression");
+    }
+
+    double result = double.parse(tokens[0]);
+    for (int i = 0; i < operators.length; i++) {
+      double nextValue = double.parse(tokens[i + 1]);
+      switch (operators[i]) {
+        case '+':
+          result += nextValue;
+          break;
+        case '-':
+          result -= nextValue;
+          break;
+        case '*':
+          result *= nextValue;
+          break;
+        case '/':
+          if (nextValue == 0) throw Exception("Division by zero");
+          result /= nextValue;
+          break;
+      }
+    }
+    return result;
+  }
+
+  Widget buildButtonRow(List<dynamic> items, double width, double height, List<Function> actions) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(items.length, (index) {
@@ -88,11 +167,7 @@ class _CalculatorState extends State<Calculator> {
           width: width * 0.22,
           height: height * 0.1,
           decoration: BoxDecoration(
-            color: items[index] == "/" ||
-                    items[index] == "X" ||
-                    items[index] == "-" ||
-                    items[index] == "+" ||
-                    items[index] == "="
+            color: items[index] == "/" || items[index] == "X" || items[index] == "-" || items[index] == "+" || items[index] == "="
                 ? Colors.orange
                 : Colors.grey.shade800,
             shape: BoxShape.circle,
@@ -108,8 +183,7 @@ class _CalculatorState extends State<Calculator> {
       onPressed: () => onPressed(),
       child: item is IconData
           ? Icon(item, color: Colors.white)
-          : Text(item,
-              style: const TextStyle(color: Colors.white, fontSize: 25)),
+          : Text(item, style: const TextStyle(color: Colors.white, fontSize: 25)),
     );
   }
 }
